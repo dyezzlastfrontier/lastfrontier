@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Последний рубеж — скачать лаунчер</title>
+<meta name="description" content="Военный RP-сервер Minecraft 1.20.1: склады Озона против складов ВБ. Скачайте лаунчер — он сам установит игру, Forge и моды.">
+<meta property="og:title" content="Последний рубеж">
+<meta property="og:description" content="Военный RP-сервер Minecraft. Склады Озона против складов ВБ. Скачайте лаунчер и заходите.">
+<link rel="icon" href="icon.png">
+<style>
+:root {
+  --night: #0f120d;
+  --night-2: #171b14;
+  --brass: #c8b77a;
+  --brass-dim: #8a7a45;
+  --ozon: #1f6bff;
+  --wb: #b02bd6;
+  --paper: #e9e2cb;
+  --paper-2: #ddd4b8;
+  --ink: #1d1f18;
+  --ink-soft: #55574a;
+  --stamp: #a8392c;
+  --text: #e6e8df;
+  --muted: #9aa08c;
+  --display: 'Bahnschrift Condensed', 'Bahnschrift', 'DIN Condensed', 'Arial Narrow', 'Roboto Condensed', sans-serif;
+  --body: 'Segoe UI', system-ui, -apple-system, 'Roboto', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+html, body { overflow-x: hidden; }
+body { background: var(--night); color: var(--text); font: 17px/1.6 var(--body); -webkit-font-smoothing: antialiased; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--brass); outline-offset: 3px; }
+.wrap { max-width: 1160px; margin: 0 auto; padding: 0 28px; }
+
+/* ---------- шапка ---------- */
+.top { position: absolute; inset: 0 0 auto; z-index: 5; }
+.top .wrap { display: flex; align-items: center; justify-content: space-between; height: 72px; }
+.brand { font: 600 22px/1 var(--display); letter-spacing: .04em; text-decoration: none; }
+.top nav { display: flex; gap: 28px; align-items: center; font-size: 15px; }
+.top nav a { text-decoration: none; color: #c9cdbf; }
+.top nav a:hover { color: #fff; }
+.top nav .discord { padding: 8px 16px; border: 1px solid rgba(200,183,122,.45); border-radius: 3px; color: var(--brass); }
+.top nav .discord:hover { background: rgba(200,183,122,.1); }
+
+/* ---------- первый экран: живая сцена ---------- */
+.hero { position: relative; min-height: min(100vh, 960px); min-height: min(100svh, 960px); display: flex; align-items: flex-end; overflow: hidden; }
+.hero canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(15,18,13,0) 30%, rgba(15,18,13,.62) 62%, var(--night) 96%); pointer-events: none; }
+.hero .wrap { position: relative; z-index: 2; width: 100%; display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: 56px; align-items: end; padding-bottom: 64px; padding-top: 120px; }
+.title {
+  font: 700 clamp(46px, 6.6vw, 112px)/.86 var(--display);
+  letter-spacing: -.01em; text-transform: uppercase;
+  color: #f1ecd8;
+  text-shadow: 0 4px 40px rgba(0,0,0,.6);
+}
+.title span { display: block; }
+.title span + span { color: transparent; -webkit-text-stroke: 2px #f1ecd8; }
+.lead { margin-top: 24px; max-width: 34em; font-size: 19px; color: #d5d8cb; }
+.status { display: inline-flex; align-items: center; gap: 10px; margin-top: 22px; font-size: 15px; color: var(--muted); }
+.status i { width: 9px; height: 9px; border-radius: 50%; background: #6b705f; }
+.status.on i { background: #5bd47a; box-shadow: 0 0 0 4px rgba(91,212,122,.18); }
+.status.on { color: #cfe9d4; }
+
+/* ---------- накладная (главный элемент) ---------- */
+.label {
+  position: relative; color: var(--ink);
+  background: var(--paper);
+  background-image: repeating-linear-gradient(0deg, rgba(0,0,0,.018) 0 2px, transparent 2px 4px);
+  border-radius: 2px;
+  box-shadow: 0 30px 60px -20px rgba(0,0,0,.7), 0 0 0 1px rgba(0,0,0,.25);
+  transform: rotate(1.2deg);
+  animation: drop .9s cubic-bezier(.2,.9,.25,1.15) .25s both;
+}
+@keyframes drop { from { transform: translateY(-40px) rotate(-4deg); opacity: 0; } to { transform: rotate(1.2deg); opacity: 1; } }
+.label::before { /* перфорация */
+  content: ''; position: absolute; left: 0; right: 0; top: -6px; height: 12px;
+  background: radial-gradient(circle at 7px 6px, var(--night) 4px, transparent 4.5px) 0 0 / 14px 12px repeat-x;
+}
+.label-head { display: flex; justify-content: space-between; align-items: center; padding: 20px 22px 14px; border-bottom: 2px solid var(--ink); }
+.label-head b { font: 700 26px/1 var(--display); letter-spacing: .02em; }
+.label-head small { font-size: 13px; color: var(--ink-soft); text-align: right; line-height: 1.3; }
+.fields { display: grid; grid-template-columns: 1fr 1fr; }
+.field { padding: 10px 22px; border-bottom: 1px solid rgba(29,31,24,.25); }
+.field:nth-child(odd) { border-right: 1px solid rgba(29,31,24,.25); }
+.field.wide { grid-column: 1 / -1; border-right: 0; }
+.field dt { font-size: 12px; color: var(--ink-soft); }
+.field dd { font: 600 17px/1.3 var(--display); letter-spacing: .01em; }
+.barcode { display: block; width: 100%; height: 54px; margin: 14px 0 4px; }
+.track { font: 12px/1.35 Consolas, 'Courier New', monospace; color: var(--ink-soft); word-break: break-all; }
+.label-body { padding: 4px 22px 22px; }
+.get {
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  margin-top: 18px; padding: 18px 20px; width: 100%;
+  background: var(--ink); color: var(--paper); text-decoration: none;
+  font: 700 22px/1 var(--display); letter-spacing: .03em; border-radius: 2px;
+  transition: background .15s;
+}
+.get:hover { background: #2f3226; }
+.get svg { width: 22px; height: 22px; }
+.get-note { margin-top: 10px; font-size: 13px; color: var(--ink-soft); text-align: center; }
+.stamp {
+  position: absolute; right: 22px; bottom: 132px; transform: rotate(-9deg);
+  border: 3px solid var(--stamp); color: var(--stamp); border-radius: 4px;
+  padding: 4px 10px; font: 700 18px/1 var(--display); letter-spacing: .06em;
+  opacity: .82; mix-blend-mode: multiply; pointer-events: none;
+}
+.mobile-note { display: none; margin-top: 10px; padding: 10px 12px; background: var(--paper-2); font-size: 14px; border-radius: 2px; }
+
+/* ---------- секции ---------- */
+section { padding: 96px 0; }
+h2 { font: 700 clamp(36px, 5vw, 56px)/1 var(--display); letter-spacing: .01em; margin-bottom: 14px; }
+.sub { color: var(--muted); max-width: 40em; margin-bottom: 44px; }
+
+/* шаги — это действительно последовательность */
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; counter-reset: s; border-top: 1px solid rgba(200,183,122,.3); }
+.step { padding: 30px 32px 0 0; counter-increment: s; }
+.step + .step { padding-left: 32px; border-left: 1px solid rgba(200,183,122,.18); }
+.step::before { content: counter(s); display: block; font: 700 64px/1 var(--display); color: var(--brass); margin-bottom: 14px; }
+.step h3 { font: 600 24px/1.15 var(--display); margin-bottom: 8px; }
+.step p { color: #c4c8b9; font-size: 16px; }
+
+/* предупреждение Windows */
+.smartscreen { display: grid; grid-template-columns: 1.1fr 1fr; gap: 56px; align-items: center; }
+.ss-text p { color: #c4c8b9; margin-bottom: 14px; max-width: 34em; }
+.ss-text b { color: #fff; font-weight: 600; }
+.win { background: #0b57a4; color: #fff; padding: 30px 30px 24px; font-family: 'Segoe UI', system-ui, sans-serif; border-radius: 2px; box-shadow: 0 24px 50px -20px rgba(0,0,0,.8); }
+.win h4 { font-weight: 300; font-size: 26px; line-height: 1.2; margin-bottom: 14px; }
+.win p { font-size: 14px; opacity: .92; }
+.win .more { display: inline-block; margin-top: 10px; font-size: 14px; text-decoration: underline; position: relative; }
+.win .row { display: flex; justify-content: flex-end; gap: 8px; margin-top: 28px; }
+.win .btn { padding: 7px 18px; font-size: 14px; border: 2px solid rgba(255,255,255,.7); }
+.win .btn.hl { outline: 3px solid var(--brass); outline-offset: 3px; }
+.win .tip { display: block; margin-top: 14px; font-size: 13px; color: var(--brass); }
+
+/* фракции: линия фронта */
+.front { display: grid; grid-template-columns: 1fr 1fr; min-height: 340px; }
+.side { padding: 48px 44px; position: relative; }
+.side.ozon { background: linear-gradient(135deg, rgba(31,107,255,.22), rgba(31,107,255,.04)); border-left: 4px solid var(--ozon); }
+.side.wb { background: linear-gradient(225deg, rgba(176,43,214,.22), rgba(176,43,214,.04)); border-right: 4px solid var(--wb); text-align: right; }
+.side h3 { font: 700 72px/.9 var(--display); margin-bottom: 18px; }
+.side.ozon h3 { color: #6f9dff; }
+.side.wb h3 { color: #d27aea; }
+.side p { color: #c9ccbf; max-width: 26em; }
+.side.wb p { margin-left: auto; }
+.side ul { list-style: none; margin-top: 18px; color: #a9ae9c; font-size: 15px; }
+.vs { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font: 700 28px/1 var(--display); color: var(--brass); background: var(--night); padding: 10px 12px; z-index: 2; }
+.front-wrap { position: relative; }
+
+/* требования и вопросы */
+.two { display: grid; grid-template-columns: 1fr 1.4fr; gap: 64px; align-items: start; }
+.req { border-top: 1px solid rgba(200,183,122,.3); }
+.req div { display: flex; justify-content: space-between; gap: 16px; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,.07); font-size: 16px; }
+.req span { color: var(--muted); }
+.req b { font-weight: 600; text-align: right; }
+details { border-bottom: 1px solid rgba(255,255,255,.08); }
+details:first-of-type { border-top: 1px solid rgba(200,183,122,.3); }
+summary { cursor: pointer; list-style: none; padding: 18px 36px 18px 0; position: relative; font-weight: 600; font-size: 17px; }
+summary::-webkit-details-marker { display: none; }
+summary::after { content: '+'; position: absolute; right: 4px; top: 12px; font: 400 28px/1 var(--display); color: var(--brass); transition: transform .2s; }
+details[open] summary::after { transform: rotate(45deg); }
+details p { padding: 0 0 18px; color: #c4c8b9; max-width: 40em; }
+details code { background: rgba(255,255,255,.08); padding: 1px 6px; border-radius: 2px; font-size: 15px; }
+
+/* новости */
+.news { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 28px; }
+.news article { border-left: 2px solid var(--brass-dim); padding: 4px 0 4px 20px; }
+.news time { font-size: 14px; color: var(--muted); }
+.news h3 { font: 600 24px/1.15 var(--display); margin: 4px 0 8px; }
+.news p { color: #c4c8b9; font-size: 16px; white-space: pre-line; }
+
+footer { padding: 48px 0 56px; border-top: 1px solid rgba(255,255,255,.07); color: #7d8270; font-size: 14px; }
+footer .wrap { display: flex; justify-content: space-between; gap: 32px; flex-wrap: wrap; }
+footer p { max-width: 46em; }
+
+/* ---------- адаптив ---------- */
+@media (max-width: 980px) {
+  .hero .wrap { grid-template-columns: 1fr; gap: 40px; }
+  .label { max-width: 440px; width: 100%; }
+  .smartscreen, .two { grid-template-columns: 1fr; gap: 40px; }
+}
+@media (max-width: 720px) {
+  body { font-size: 16px; }
+  .wrap { padding: 0 20px; }
+  .top nav a:not(.discord) { display: none; }
+  .steps { grid-template-columns: 1fr; }
+  .step, .step + .step { padding: 26px 0; border-left: 0; border-bottom: 1px solid rgba(200,183,122,.18); }
+  .front { grid-template-columns: 1fr; }
+  .side.wb { text-align: left; border-right: 0; border-left: 4px solid var(--wb); }
+  .side.wb p { margin-left: 0; }
+  .side h3 { font-size: 56px; }
+  .vs { position: static; transform: none; display: block; text-align: center; padding: 14px; }
+  section { padding: 72px 0; }
+  .mobile-note.show { display: block; }
+  .label { transform: rotate(.6deg); animation: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .label { animation: none; }
+  html { scroll-behavior: auto; }
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="./">Последний рубеж</a>
+    <nav>
+      <a href="#start">Как начать</a>
+      <a href="#factions">Фракции</a>
+      <a href="#faq">Вопросы</a>
+      <a class="discord" href="https://discord.gg/pfYp9GbK7X" target="_blank" rel="noopener">Discord</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<div class="hero">
+  <canvas id="scene" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <div>
+      <h1 class="title"><span>Последний</span><span>рубеж</span></h1>
+      <p class="lead">Военный RP-сервер Minecraft 1.20.1. Склады Озона против складов ВБ: русское оружие против американского, техника, авиация и фронт, который держат живые игроки.</p>
+      <div class="status" id="status"><i></i><span>Проверяю сервер…</span></div>
+    </div>
+
+    <div class="label" id="download">
+      <div class="label-head">
+        <b>Накладная</b>
+        <small>Лаунчер<br>для Windows</small>
+      </div>
+      <dl class="fields">
+        <div class="field"><dt>Отправитель</dt><dd>Штаб рубежа</dd></div>
+        <div class="field"><dt>Получатель</dt><dd>Вы, боец</dd></div>
+        <div class="field"><dt>Версия</dt><dd id="d-version">—</dd></div>
+        <div class="field"><dt>Вес</dt><dd id="d-size">—</dd></div>
+        <div class="field wide"><dt>Обновлён</dt><dd id="d-date">—</dd></div>
+      </dl>
+      <div class="label-body">
+        <svg class="barcode" id="barcode" viewBox="0 0 256 54" preserveAspectRatio="none" aria-hidden="true"></svg>
+        <div class="track" title="Контрольная сумма SHA-256 установщика">Трек-номер (SHA-256): <span id="d-sha">загружается…</span></div>
+        <a class="get" id="get" href="http://5.188.166.59:8080/launcher/PosledniyRubezh-Setup.exe">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="square"><path d="M12 3v13M5 10l7 7 7-7M4 21h16"/></svg>
+          Скачать лаунчер
+        </a>
+        <p class="get-note">Бесплатно. Игру, Java, Forge и моды лаунчер поставит сам.</p>
+        <p class="mobile-note" id="mobile-note">Лаунчер работает на компьютере с Windows. Откройте эту страницу на ПК.</p>
+      </div>
+      <div class="stamp">Проверено</div>
+    </div>
+  </div>
+</div>
+
+<section id="start">
+  <div class="wrap">
+    <h2>Как попасть на фронт</h2>
+    <p class="sub">Лицензия Minecraft не нужна. Всё, что требуется, лаунчер скачает и настроит сам.</p>
+    <div class="steps">
+      <div class="step">
+        <h3>Скачайте и установите</h3>
+        <p>Запустите <b>PosledniyRubezh-Setup.exe</b> и выберите папку. На рабочем столе появится ярлык «Последний рубеж».</p>
+      </div>
+      <div class="step">
+        <h3>Создайте аккаунт</h3>
+        <p>Придумайте ник и пароль прямо в лаунчере. Ник латиницей, от 3 до 16 символов — так вас будут видеть в игре.</p>
+      </div>
+      <div class="step">
+        <h3>Нажмите «В бой»</h3>
+        <p>Первый запуск скачает около 1,5 ГБ: игру, моды и Java. Потом лаунчер сам подключит вас к серверу.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap smartscreen">
+    <div class="ss-text">
+      <h2>Если Windows предупредит</h2>
+      <p>При первом запуске установщика может появиться синее окно «Система Windows защитила ваш компьютер». Так Windows реагирует на любую программу без платного сертификата подписи, а у небольших проектов его обычно нет.</p>
+      <p>Нажмите <b>«Подробнее»</b>, затем <b>«Выполнить в любом случае»</b>.</p>
+      <p>Хотите убедиться, что файл не подменили? Сравните его контрольную сумму с трек-номером в накладной: в командной строке выполните <code style="background:rgba(255,255,255,.08);padding:1px 6px">certutil -hashfile PosledniyRubezh-Setup.exe SHA256</code>.</p>
+    </div>
+    <div class="win" aria-hidden="true">
+      <h4>Система Windows защитила ваш компьютер</h4>
+      <p>Фильтр SmartScreen в Microsoft Defender предотвратил запуск неопознанного приложения…</p>
+      <span class="more">Подробнее</span>
+      <span class="tip">Сначала «Подробнее», затем появится кнопка ниже</span>
+      <div class="row"><span class="btn hl">Выполнить в любом случае</span><span class="btn">Не выполнять</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="factions">
+  <div class="wrap">
+    <h2>Выберите сторону</h2>
+    <p class="sub">Две фракции, два склада и одна линия фронта между ними. Фракцию выбирают на сервере.</p>
+    <div class="front-wrap">
+      <div class="front">
+        <div class="side ozon">
+          <h3>Озон</h3>
+          <p>Русское оружие и техника: Т-72Б3, БМП-2, БТР-80, «Тигр», Су-25 и Ми-28Н. Держит синий склад на западном фланге.</p>
+        </div>
+        <div class="side wb">
+          <h3>ВБ</h3>
+          <p>Американское вооружение: M1A2 Abrams, Bradley, Humvee, MaxxPro, A-10 и AH-1Z. Держит фиолетовый склад на востоке.</p>
+        </div>
+      </div>
+      <div class="vs">против</div>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap two">
+    <div>
+      <h2>Что нужно</h2>
+      <p class="sub">Сборка тяжёлая: техника, баллистика, взрывы.</p>
+      <div class="req">
+        <div><span>Система</span><b>Windows 10 или 11, 64 бита</b></div>
+        <div><span>Память</span><b>от 8 ГБ, лучше 16 ГБ</b></div>
+        <div><span>Место на диске</span><b>около 4 ГБ</b></div>
+        <div><span>Видеокарта</span><b>с обновлённым драйвером</b></div>
+        <div><span>Интернет</span><b>для первой загрузки ~1,5 ГБ</b></div>
+      </div>
+    </div>
+    <div>
+      <h2>Вопросы</h2>
+      <p class="sub">Не нашли ответ — пишите в Discord.</p>
+      <details><summary>Нужно ли покупать Minecraft?</summary><p>Нет. Аккаунт создаётся прямо в лаунчере, отдельная лицензия не нужна.</p></details>
+      <details><summary>Можно поставить свои моды или скин?</summary><p>Нет. У всех одинаковая сборка: лаунчер сверяет файлы с сервером и удаляет лишние моды. Свои скины отключены — внешний вид бойца определяет фракция.</p></details>
+      <details><summary>Антивирус ругается на лаунчер</summary><p>Добавьте папку лаунчера в исключения. Лаунчер скачивает файлы игры только с серверов проекта, Mojang и Forge и проверяет контрольную сумму каждого файла.</p></details>
+      <details><summary>Игра вылетает или не запускается</summary><p>Лаунчер покажет причину и подскажет, что делать. Чаще всего помогает кнопка «Переустановить клиент» или установка <a href="https://aka.ms/vs/17/release/vc_redist.x64.exe">Visual C++ Redistributable</a>. Если не помогло, пришлите лог в Discord.</p></details>
+      <details><summary>Где хранятся файлы игры?</summary><p>В папке <code>%APPDATA%\.posledniy-rubezh</code>. Её можно открыть кнопкой «Папка игры» в настройках лаунчера.</p></details>
+      <details><summary>Как обновлять лаунчер и моды?</summary><p>Никак — всё происходит само. Моды обновляются при каждом нажатии «В бой», а о новой версии лаунчера он сообщит сам.</p></details>
+    </div>
+  </div>
+</section>
+
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Telegram: <a href="https://t.me/lastlineminecraft">@lastlineminecraft</a></p>
+    <p>«Последний рубеж» — фанатский игровой проект. Не является официальным продуктом Minecraft и не связан с Mojang и Microsoft. Названия фракций — игровая условность, проект не связан с компаниями Ozon и Wildberries.</p>
+    <p><a href="https://discord.gg/pfYp9GbK7X" target="_blank" rel="noopener">Discord сервера</a></p>
+  </div>
+</footer>
+
+<script src="scene.js"></script>
+<script>
+(function () {
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  try { if (window.WarScene) new WarScene.Scene(document.getElementById('scene'), { labels: true }); } catch (e) { /* без сцены страница работает */ }
+  if (reduce) document.getElementById('scene').style.opacity = '.6';
+
+  function $(id) { return document.getElementById(id); }
+  function mb(n) { return (n / 1048576).toFixed(n > 104857600 ? 0 : 1).replace('.', ',') + ' МБ'; }
+
+  // штрихкод из контрольной суммы: у каждой версии свой
+  function barcode(hex) {
+    var svg = $('barcode'), x = 0, out = '';
+    for (var i = 0; i < hex.length && x < 256; i++) {
+      var v = parseInt(hex[i], 16);
+      var w = 1 + (v & 3), gap = 1 + ((v >> 2) & 1);
+      out += '<rect x="' + x + '" y="0" width="' + w + '" height="54" fill="#1d1f18"/>';
+      x += w + gap + (i % 8 === 7 ? 2 : 0);
+    }
+    svg.innerHTML = out;
+  }
+  barcode('c8b77a1f6bffb02bd6e9e2cb1d1f18a8392c0f120d171b14');
+
+  // Сайт на GitHub Pages: репозиторий узнаём из адреса (ник.github.io/репозиторий),
+  // установщик и данные о нём — из последнего релиза этого репозитория
+  var owner = location.hostname.split('.')[0];
+  var repo = location.pathname.split('/').filter(Boolean)[0] || (owner + '.github.io');
+  var FILE = 'PosledniyRubezh-Setup.exe';
+  if (/\.github\.io$/.test(location.hostname)) {
+    $('get').href = 'https://github.com/' + owner + '/' + repo + '/releases/latest/download/' + FILE;
+    fetch('https://api.github.com/repos/' + owner + '/' + repo + '/releases/latest').then(function (r) { return r.json(); }).then(function (rel) {
+      var a = (rel.assets || []).filter(function (x) { return x.name === FILE; })[0];
+      if (!a) { $('d-sha').textContent = 'установщик ещё не выложен в релиз'; return; }
+      $('d-version').textContent = String(rel.tag_name || '').replace(/^v/i, '');
+      $('d-size').textContent = mb(a.size);
+      $('d-date').textContent = new Date(rel.published_at || a.updated_at).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+      var sha = String(a.digest || '').replace(/^sha256:/, '');
+      $('d-sha').textContent = sha || 'см. на странице релиза';
+      if (sha) barcode(sha);
+    }).catch(function () { $('d-sha').textContent = 'не удалось получить'; });
+  }
+
+  // Онлайн Minecraft-сервера — через публичный сервис проверки серверов (работает по HTTPS)
+  fetch('https://api.mcsrvstat.us/3/d2.atlantix.me:25058').then(function (r) { return r.json(); }).then(function (s) {
+    var el = $('status');
+    if (s.online) { el.classList.add('on'); el.lastChild.textContent = 'Сервер онлайн: ' + ((s.players && s.players.online) || 0) + ' из ' + ((s.players && s.players.max) || 0) + ' бойцов'; }
+    else el.lastChild.textContent = 'Сервер сейчас выключен — загляните позже или спросите в Discord';
+  }).catch(function () { $('status').lastChild.textContent = 'Статус сервера недоступен'; });
+
+  // на телефоне подсказываем, что лаунчер для ПК
+  if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) $('mobile-note').classList.add('show');
+})();
+</script>
+</body>
+</html>
