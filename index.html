@@ -383,7 +383,7 @@ footer p { max-width: 46em; }
       var rel = null, a = null;
       (Array.isArray(list) ? list : []).some(function (x) {
         if (x.draft) return false;
-        var f = (x.assets || []).filter(function (y) { return y.name === FILE || /^PosledniyRubezh-Setup.*\.exe$/i.test(y.name); })[0];
+        var f = (x.assets || []).filter(function (y) { return y.name === FILE || /^PosledniyRubezh.*\.exe$/i.test(y.name); })[0];
         if (f) { rel = x; a = f; return true; }
         return false;
       });
