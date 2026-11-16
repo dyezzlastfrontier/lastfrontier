@@ -377,10 +377,18 @@ footer p { max-width: 46em; }
   var repo = location.pathname.split('/').filter(Boolean)[0] || (owner + '.github.io');
   var FILE = 'PosledniyRubezh-Setup.exe';
   if (/\.github\.io$/.test(location.hostname)) {
-    $('get').href = 'https://github.com/' + owner + '/' + repo + '/releases/latest/download/' + FILE;
-    fetch('https://api.github.com/repos/' + owner + '/' + repo + '/releases/latest').then(function (r) { return r.json(); }).then(function (rel) {
-      var a = (rel.assets || []).filter(function (x) { return x.name === FILE; })[0];
+    // Берём самый свежий опубликованный релиз, в котором реально лежит установщик:
+    // если в последний релиз забыли прикрепить файл, кнопка не даст 404, а возьмёт предыдущий
+    fetch('https://api.github.com/repos/' + owner + '/' + repo + '/releases?per_page=15').then(function (r) { return r.json(); }).then(function (list) {
+      var rel = null, a = null;
+      (Array.isArray(list) ? list : []).some(function (x) {
+        if (x.draft) return false;
+        var f = (x.assets || []).filter(function (y) { return y.name === FILE || /^PosledniyRubezh-Setup.*\.exe$/i.test(y.name); })[0];
+        if (f) { rel = x; a = f; return true; }
+        return false;
+      });
       if (!a) { $('d-sha').textContent = 'установщик ещё не выложен в релиз'; return; }
+      $('get').href = a.browser_download_url;
       $('d-version').textContent = String(rel.tag_name || '').replace(/^v/i, '');
       $('d-size').textContent = mb(a.size);
       $('d-date').textContent = new Date(rel.published_at || a.updated_at).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
